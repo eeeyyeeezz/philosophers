@@ -7,66 +7,41 @@
 
 #include "philo_one.h"
 
-int			ft_strlen(char *str)
+void		*print(void *buf)
 {
-	int i;
+	pthread_mutex_t		mutex;
 
-	i = 0;
-	while (str[i])
-		i++;
-	return (i);
+	pthread_mutex_lock(&mutex);
+
+
+	pthread_mutex_unlock(&mutex);
+	return (NULL);
 }
 
-int			ft_error(char *str)
+void		create_threads(pthread_t *philo, t_info *info)
 {
-	write(2, str, ft_strlen(str));
-	exit(1);
+	int		i;
+
+	i = -1;
+	while (++i < info->philo_num)
+		pthread_create(&philo[i], NULL, print, NULL);
 }
-
-int			ft_isnum(char c)	
-{
-	if (c >= 48 && c <= 57)
-		return (1);
-	else 
-		return (0);
-}
-
-int			check_argv_excess(char **argv)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	while (argv[++i])
-	{
-		j = 0;
-		while (argv[i][j])
-		{
-			// printf("lol [%c]\n", argv[i][j]);
-			if (!ft_isnum(argv[i][j]))
-				return (ft_error("Extra characters in arguments\n"));
-			j++;
-		}
-	}
-	return (0);
-}		
-
-int		check_errors(int argc, char **argv)
-{
-	if (argc != 5 && argc != 6)
-		return (ft_error("Error! Arguments\n"));		
-	check_argv_excess(argv);
-	return (1);
-}
-
 
 
 int			main(int argc, char **argv)
 {	
 	pthread_t	*philo;
+	t_info		info;
 
 	check_errors(argc, argv);
-	pars_arg(argc, argv);
+	declare_struct(&info, argv, argc);
+	pars_arg(&info, argc, argv);
+	philo = malloc(sizeof(pthread_t) * (info.philo_num + 1));
+	if (!philo)
+		return (1);
+	create_threads(philo, &info);
+
+	// printf(")) [%d] [%d] [%d] [%d]\n", info.philo_num, info.time_live, info.time_eat, info.time_sleep);
 }
 
 // !) ft_error освобождение памяти добавить

@@ -7,45 +7,71 @@
 
 #include "philo_one.h"
 
-void		*print(void *buf)
+void		lock_mutex(t_state *state)
 {
-	pthread_mutex_t		mutex;
+	if (state->philo_score % 2 == 0)
+	{
+		pthread_mutex_lock(&state->left);	
+		pthread_mutex_lock(state->right);	
+	}
+	else
+	{
+		pthread_mutex_lock(state->right);
+		pthread_mutex_lock(&state->left);	
+	}
+}
 
-	pthread_mutex_lock(&mutex);
+void		unlock_mutex(t_state *state)
+{
+	if (state->philo_score % 2 == 0)
+	{
+		pthread_mutex_unlock(&state->left);	
+		pthread_mutex_unlock(state->right);	
+	}
+	else
+	{
+		pthread_mutex_unlock(state->right);
+		pthread_mutex_unlock(&state->left);	
+	}
+}
+
+void		*start_eat(void *tmp_state)
+{
+	t_state *state;
+	state = (t_state *)tmp_state;
+
+	lock_mutex(state);
 
 
-	pthread_mutex_unlock(&mutex);
+	unlock_mutex(state);
 	return (NULL);
 }
 
-void		create_threads(pthread_t *philo, pthread_mutex_t *forks, t_info *info)
+void		pthreads_create(t_struct *global, pthread_t *philo, int argc)
 {
-	int		i;
+	int i;
 
 	i = -1;
-	while (++i < info->philo_num)
-		pthread_create(&philo[i], NULL, print, NULL);
+	while (++i < global->philo_num)
+		pthread_create(&philo[i], NULL, start_eat, (void *)&global->state[i]);
 }
-
 
 int			main(int argc, char **argv)
 {	
+	t_struct		global;
 	pthread_t		*philo;
-	pthread_mutex_t	*forks;
-	t_info		info;
 
 	check_errors(argc, argv);
-	declare_struct(&info, argv, argc);
-	pars_arg(&info, argc, argv);
-	philo = malloc(sizeof(pthread_t) * (info.philo_num + 1));
+	global.state = malloc(sizeof(t_state) * ft_atoi(argv[1]));
+	if (!global.state)
+		return (ft_error("Malloc Error!\n"));
+	declare_struct(&global, argv, argc);
+	pars_arg(&global, argc, argv);
+	// printf("CHECK [%d]\n", global.state[3].time_eat);
+	philo = malloc(sizeof(pthread_t) * (global.philo_num + 1));
 	if (!philo)
 		return (ft_error("Malloc Error!\n"));
-	forks = malloc(sizeof(pthread_mutex_t) * info.philo_num);
-	if (!forks)
-		return (ft_error("Malloc Error!\n"));
-	create_threads(philo, forks, &info);
-
-	// printf(")) [%d] [%d] [%d] [%d]\n", info.philo_num, info.time_live, info.time_eat, info.time_sleep);
+	pthreads_create(&global, philo, argc);
 }
 
 // !) ft_error освобождение памяти добавить

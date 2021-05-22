@@ -35,7 +35,6 @@ int			check_argv_excess(char **argv)
 		j = 0;
 		while (argv[i][j])
 		{
-			// printf("lol [%c]\n", argv[i][j]);
 			if (!ft_isnum(argv[i][j]))
 				return (ft_error("Extra characters in arguments\n"));
 			j++;

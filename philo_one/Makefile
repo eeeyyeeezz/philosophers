@@ -1,3 +1,3 @@
 
 RUN:
-	@gcc *.c -o philo_one 
+	@gcc *.c -g -o philo_one 

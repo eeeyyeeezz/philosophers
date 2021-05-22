@@ -31,6 +31,9 @@ typedef		struct s_struct
 }					t_struct;
 
 
+void	ft_putchar(char c);
+void	ft_putstr(char *s);
+void	ft_putnbr(int nb);
 int		ft_atoi(const char *str);
 int		ft_strlen(char *str);
 int		ft_error(char *str);

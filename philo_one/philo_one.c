@@ -41,8 +41,10 @@ void		*start_eat(void *tmp_state)
 	state = (t_state *)tmp_state;
 
 	lock_mutex(state);
-
-
+	ft_putnbr(state->philo_score);
+	ft_putstr(" Has taken a fork\n");
+	ft_putnbr(state->philo_score);
+	ft_putstr(" Is eating\n");
 	unlock_mutex(state);
 	return (NULL);
 }
@@ -53,7 +55,11 @@ void		pthreads_create(t_struct *global, pthread_t *philo, int argc)
 
 	i = -1;
 	while (++i < global->philo_num)
+	{
+		// write(1, "kavo\n", 5);
 		pthread_create(&philo[i], NULL, start_eat, (void *)&global->state[i]);
+		pthread_join(philo[i], (void *)&global->state[i]);
+	}
 }
 
 int			main(int argc, char **argv)

@@ -20,7 +20,7 @@ typedef		struct s_state
 	int				philo_score;
 	int				time_live;
 	int				time_eat;
-	size_t			philo_time;
+	ssize_t			philo_time;		// когда последнйи раз поел
 	int				time_sleep;
 	int				times_to_eat;	
 	pthread_mutex_t	left;

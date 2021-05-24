@@ -7,7 +7,7 @@
 
 #include "philo_one.h"
 
-void		lock_mutex(t_state *state)
+void		double_lock_mutex(t_state *state)
 {
 	if (state->philo_score % 2 == 0)
 	{
@@ -35,18 +35,40 @@ void		unlock_mutex(t_state *state)
 	}
 }
 
+void	lock_left_mutex(t_state *state)
+{
+	if (state->philo_score % 2 == 0)
+		pthread_mutex_lock(&state->left);	
+	else	
+		pthread_mutex_lock(state->right);	
+}
+
+void	lock_right_mutex(t_state *state)
+{
+	if (state->philo_score % 2 == 0)
+		pthread_mutex_lock(state->right);	
+	else	
+		pthread_mutex_lock(&state->left);	
+}
+
+void		check_dead(t_state *state)
+{
+	// printf("TIME LIVE [%d] gettime [%lu] philotime [%zd]\n", state->time_live, get_time(*state->time), state->philo_time);
+	if ((state->time_live - (get_time(*state->time) - state->philo_time)) <= 0)
+			printf("IM DEAD BRO [%d]\n", state->philo_score);
+}
 	// putnbr_str(state->philo_score, " Has taken a fork\n");
 	// putnbr_str(state->philo_score, " Has taken a fork\n");
 	// putnbr_str(state->philo_score, " Is eating\n");
 
 void		philo_eat(t_state *state)
 {
-	lock_mutex(state);
-	pthread_mutex_lock(state->write);
+	lock_left_mutex(state);
 	printf("\033[0;35m[%lu]\033[0m %d \033[0;32mhas taken a fork\033[0m\n", get_time(*state->time), state->philo_score);
+	lock_right_mutex(state);
 	printf("\033[0;35m[%lu]\033[0m %d \033[0;32mhas taken a fork\033[0m\n", get_time(*state->time), state->philo_score);
 	printf("\033[0;35m[%lu]\033[0m %d \033[0;34mis eating\033[0m\n", get_time(*state->time), state->philo_score);
-	pthread_mutex_unlock(state->write);
+	state->philo_time = get_time(*state->time);
 	ft_usleep(state->time_eat);
 	unlock_mutex(state);
 }
@@ -57,15 +79,33 @@ void		philo_sleep(t_state *state)
 	ft_usleep(state->time_sleep);
 }
 
+void		philo_think(t_state *state)
+{
+	printf("\033[0;35m[%lu]\033[0m %d \033[1;37mis thinking\033[0m\n", get_time(*state->time), state->philo_score);
+	
+}
+
 void		*start_eat(void *tmp_state)
 {
 	t_state *state;
 	state = (t_state *)tmp_state;
+	int count;
 
-	if (!state->philo_dead)
+	if (state->times_to_eat == -1)
+		count = -1;
+	else	
+		count = state->times_to_eat;
+
+	// state->philo_time = state->time_eat;
+	while (count--)
 	{
 		philo_eat(state);
+		check_dead(state);
+		// printf("TIME LIVE [%d] gettime [%lu] philotime [%zd]\n", state->time_live, get_time(*state->time), state->philo_time);
+		// if ((state->time_live - (get_time(*state->time) - state->philo_time)) <= 0)
+		// 	printf("IM DEAD BRO\n");
 		philo_sleep(state);
+		philo_think(state);
 	}
 	return (NULL);
 }
@@ -95,7 +135,6 @@ int			main(int argc, char **argv)
 		return (ft_error("Malloc Error!\n"));
 	declare_struct(&global, argv, argc);
 	pars_arg(&global, argc, argv);
-	// printf("CHECK [%d]\n", global.state[3].time_eat);
 	philo = malloc(sizeof(pthread_t) * (global.philo_num + 1));
 	if (!philo)
 		return (ft_error("Malloc Error!\n"));
@@ -104,3 +143,4 @@ int			main(int argc, char **argv)
 }
 
 // !) ft_error освобождение памяти добавить
+// Защищать вывод мьютексом? 

@@ -21,12 +21,3 @@ ssize_t	get_time(ssize_t time)
 	gettimeofday(&t1, NULL);
 	return ((t1.tv_sec * 1000 + t1.tv_usec / 1000) - time);
 }
-
-// unsigned long   get_time(void)
-// {
-// 	struct timeval tp;
-
-// 	if (-1 == gettimeofday(&tp, NULL))
-// 		return (-1);
-// 	return (tp.tv_sec * 1000 + tp.tv_usec / 1000);
-// }

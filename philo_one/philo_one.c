@@ -46,6 +46,7 @@ void		*start_eat(void *tmp_state)
 	{
 		philo_eat(state);
 		philo_sleep(state);
+		// printf("timelive [%d] time [%zd] philotime [%zd] num [%d]\n", state->time_live, get_time(*state->time), state->philo_time, state->philo_score);
 		philo_think(state);
 	}
 	if (state->done_eat != -1)
@@ -125,15 +126,17 @@ void		free_all(t_struct *global)
 
 void		pthreads_create(t_struct *global, pthread_t *philo, int argc)
 {
+	pthread_t	philo_dead;
 	int			i;
 
 	i = -1;
-	// pthread_create(&philo_dead, NULL, dead_thread, (void *)global);
+	pthread_create(&philo_dead, NULL, dead_thread, (void *)global);
 	while (++i < global->philo_num && !global->philo_dead)
 		pthread_create(&philo[i], NULL, start_eat, (void *)&global->state[i]);
-	pthread_join(*philo, NULL);
+	pthread_join(philo_dead, NULL);
+	// pthread_join(*philo, NULL);
 	// free_all(global);
-	// pthread_detach(*philo);
+	pthread_detach(*philo);
 }
 
 void		pthreads_dead(t_struct *global)
@@ -160,10 +163,10 @@ int			main(int argc, char **argv)
 	if (!philo)
 		return (ft_error("Malloc Error!\n"));
 	pthreads_create(&global, philo, argc);
-	pthreads_dead(&global);
+	// pthreads_dead(&global);
 	return (0);
 }
 
 // !) ft_error освобождение памяти добавить
-// Защищать вывод мьютексом? 
 // Когда все поели выйти из программ
+// Защищать вывод мьютексом? 

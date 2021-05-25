@@ -53,9 +53,3 @@ void			ft_putnbr(int nb)
 	else
 		ft_putchar(nb + 48);
 }
-
-void			putnbr_str(int nb, char *str)
-{
-	ft_putnbr(nb);
-	ft_putstr(str);
-}

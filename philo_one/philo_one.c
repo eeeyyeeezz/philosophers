@@ -9,13 +9,14 @@
 
 void		philo_eat(t_state *state)
 {
-	lock_left_mutex(state);
+	lock_even_mutex(state);
 	printf("\033[0;35m[%lu]\033[0m %d \033[0;32mhas taken a fork\033[0m\n", get_time(*state->time), state->philo_score);
-	lock_right_mutex(state);
+	lock_odd_mutex(state);
 	printf("\033[0;35m[%lu]\033[0m %d \033[0;32mhas taken a fork\033[0m\n", get_time(*state->time), state->philo_score);
 	printf("\033[0;35m[%lu]\033[0m %d \033[0;34mis eating\033[0m\n", get_time(*state->time), state->philo_score);
 	state->philo_time = get_time(*state->time);
 	ft_usleep(state->time_eat);
+	state->philo_time = get_time(*state->time);
 	unlock_mutex(state);
 }
 
@@ -35,18 +36,21 @@ void		*start_eat(void *tmp_state)
 	t_state *state;
 	state = (t_state *)tmp_state;
 	int count;
+	int dead;
 
 	if (state->times_to_eat == -1)
 		count = -1;
 	else	
 		count = state->times_to_eat;
-
 	while (count--)
 	{
 		philo_eat(state);
 		philo_sleep(state);
 		philo_think(state);
 	}
+	if (state->done_eat != -1)
+		state->done_eat = 1;
+	// printf("\033[0;35m[%lu]\033[0m %d \033[1;37mhas finished eating!\033[0m\n", get_time(*state->time), state->philo_score);
 	return (NULL);
 }
 
@@ -58,13 +62,15 @@ void		*dead_thread(void *tmp_state)
 
 	while (1)
 	{
-		usleep(global->state[0].time_live / 4);
+		// usleep(global->state[0].time_live / 4);
 		i = -1;
-		// printf("INFO %d\n", state->philo_score);
 		while (++i < global->philo_num)
 		{
-			if ((global->state[i].time_live - (get_time(*global->state[i].time) - global->state[i].philo_time)) <= 0 && global->state[i].philo_time != 0)
+			if ((global->state[i].time_live - (get_time(*global->state[i].time) - global->state[i].philo_time)) <= 0 
+			&& global->state[i].philo_time != 0 && global->state[i].done_eat != 1)
 			{
+				// printf("timelive [%d] time [%zd] philotime [%zd]\n", global->state[i].time_live, get_time(*global->state[i].time), global->state[i].philo_time);
+				global->philo_dead = 1;
 				pthread_mutex_lock(global->state[i].write);	
 				printf("\033[0;35m[%zd]\033[0m %d \033[1;31mis dead\033[0m\n", get_time(*global->state[i].time), global->state[i].philo_score);
 				return (NULL);
@@ -82,10 +88,10 @@ void		pthreads_create(t_struct *global, pthread_t *philo, int argc)
 
 	i = -1;
 	pthread_create(&philo_dead, NULL, dead_thread, (void *)global);
-	while (++i < global->philo_num)
+	while (++i < global->philo_num && !global->philo_dead)
 		pthread_create(&philo[i], NULL, start_eat, (void *)&global->state[i]);
-	pthread_join(*philo, NULL);
 	pthread_join(philo_dead, NULL);
+	pthread_detach(*philo);
 }
 
 int			main(int argc, char **argv)
@@ -105,14 +111,8 @@ int			main(int argc, char **argv)
 		return (ft_error("Malloc Error!\n"));
 	pthreads_create(&global, philo, argc);
 	return (0);
-	// while (1)
-	// {
-	// 	// check_dead(global.state);
-	// 	// if (global.state->philo_dead)
-	// 		// exit(1);
-	// }
 }
 
 // !) ft_error освобождение памяти добавить
 // Защищать вывод мьютексом? 
-// Когда все поели выйти из программы
+// Когда все поели выйти из программ

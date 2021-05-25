@@ -28,7 +28,7 @@ void		unlock_mutex(t_state *state)
 	}
 }
 
-void	lock_left_mutex(t_state *state)
+void	lock_even_mutex(t_state *state)
 {
 	if (state->philo_score % 2 == 0)
 		pthread_mutex_lock(&state->left);	
@@ -36,7 +36,7 @@ void	lock_left_mutex(t_state *state)
 		pthread_mutex_lock(state->right);	
 }
 
-void	lock_right_mutex(t_state *state)
+void	lock_odd_mutex(t_state *state)
 {
 	if (state->philo_score % 2 == 0)
 		pthread_mutex_lock(state->right);	

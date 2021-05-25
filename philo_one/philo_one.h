@@ -16,12 +16,12 @@
 typedef		struct s_state
 {
 	ssize_t			*time;
-	int				philo_dead;
 	int				philo_score;
 	int				time_live;
 	int				time_eat;
-	ssize_t			philo_time;		// когда последнйи раз поел
+	ssize_t			philo_time;		// когда последний раз поел
 	int				time_sleep;
+	int				done_eat;
 	int				times_to_eat;	
 	pthread_mutex_t	left;
 	pthread_mutex_t	*right;
@@ -33,6 +33,7 @@ typedef		struct s_struct
 {
 	ssize_t			time;
 	int				philo_num;
+	int				philo_dead;
 	pthread_mutex_t	write;
 	t_state			*state;
 }					t_struct;
@@ -42,15 +43,15 @@ void			ft_usleep(ssize_t time);
 void			ft_putchar(char c);
 void			ft_putnbr(int nb);
 void			ft_putstr(char *s);
-void			putnbr_str(int nb, char *str);
 int				ft_atoi(const char *str);
 int				ft_strlen(char *str);
 int				ft_error(char *str);
 int				ft_isnum(char c);
 ssize_t			get_time(ssize_t time);
 void			unlock_mutex(t_state *state);
-void			lock_left_mutex(t_state *state);
-void			lock_right_mutex(t_state *state);
+void			lock_even_mutex(t_state *state);
+void			lock_odd_mutex(t_state *state);
+void			double_lock_mutex(t_state *state);
 void			declare_state(t_struct *global, int argc);
 void			declare_struct(t_struct *global, char **argv, int argc);
 void			pars_arg(t_struct *global, int argc, char **argv);

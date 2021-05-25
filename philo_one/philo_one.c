@@ -7,66 +7,8 @@
 
 #include "philo_one.h"
 
-void		double_lock_mutex(t_state *state)
-{
-	if (state->philo_score % 2 == 0)
-	{
-		pthread_mutex_lock(&state->left);	
-		pthread_mutex_lock(state->right);	
-	}
-	else
-	{
-		pthread_mutex_lock(state->right);
-		pthread_mutex_lock(&state->left);	
-	}
-}
-
-void		unlock_mutex(t_state *state)
-{
-	if (state->philo_score % 2 == 0)
-	{
-		pthread_mutex_unlock(&state->left);	
-		pthread_mutex_unlock(state->right);	
-	}
-	else
-	{
-		pthread_mutex_unlock(state->right);
-		pthread_mutex_unlock(&state->left);	
-	}
-}
-
-void	lock_left_mutex(t_state *state)
-{
-	if (state->philo_score % 2 == 0)
-		pthread_mutex_lock(&state->left);	
-	else	
-		pthread_mutex_lock(state->right);	
-}
-
-void	lock_right_mutex(t_state *state)
-{
-	if (state->philo_score % 2 == 0)
-		pthread_mutex_lock(state->right);	
-	else	
-		pthread_mutex_lock(&state->left);	
-}
-
-void		check_dead(t_state *state)
-{
-	// printf("TIME LIVE [%d] gettime [%lu] philotime [%zd] philo [%d]\n", state->time_live, get_time(*state->time), state->philo_time, state->philo_score);
-	if ((state->time_live - (get_time(*state->time) - state->philo_time)) <= 0)
-	{
-		pthread_mutex_lock(state->write);	
-		printf("\033[0;35m[%zd]\033[0m %d \033[1;31mis dead\033[0m\n", get_time(*state->time), state->philo_score);
-		pthread_mutex_unlock(state->write);	
-		exit(1);
-	}
-}
-
 void		philo_eat(t_state *state)
 {
-	// if (state->philo_time == 0)
-	// 	check_dead(state);
 	lock_left_mutex(state);
 	printf("\033[0;35m[%lu]\033[0m %d \033[0;32mhas taken a fork\033[0m\n", get_time(*state->time), state->philo_score);
 	lock_right_mutex(state);
@@ -142,6 +84,7 @@ void		pthreads_create(t_struct *global, pthread_t *philo, int argc)
 	pthread_create(&philo_dead, NULL, dead_thread, (void *)global);
 	while (++i < global->philo_num)
 		pthread_create(&philo[i], NULL, start_eat, (void *)&global->state[i]);
+	pthread_join(*philo, NULL);
 	pthread_join(philo_dead, NULL);
 }
 

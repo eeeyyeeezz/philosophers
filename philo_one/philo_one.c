@@ -50,8 +50,23 @@ void		*start_eat(void *tmp_state)
 	}
 	if (state->done_eat != -1)
 		state->done_eat = 1;
-	// printf("\033[0;35m[%lu]\033[0m %d \033[1;37mhas finished eating!\033[0m\n", get_time(*state->time), state->philo_score);
+	printf("\033[0;35m[%lu]\033[0m %d \033[2;37mhas finished eating!\033[0m\n", get_time(*state->time), state->philo_score);
 	return (NULL);
+}
+
+int			count_ate(t_struct *global)
+{
+	int i;
+	int count;
+
+	i = -1;
+	count = 0;
+	if (global->state[0].times_to_eat != -1)
+	{
+		while (global->state[++i].done_eat == 1)
+			count++;
+	}
+	return (count);
 }
 
 void		*dead_thread(void *tmp_state)
@@ -76,7 +91,8 @@ void		*dead_thread(void *tmp_state)
 				return (NULL);
 			}
 		}
-		
+		if (count_ate(global) == global->philo_num)
+			return (NULL);		
 	}
 	return (NULL);
 }
@@ -96,19 +112,37 @@ int			check_eat(t_struct *global)
 	return (0);
 }
 
+void		free_all(t_struct *global)
+{
+	int i;
+
+	i = -1;
+	free(global->state);
+	while (&global->state[++i])
+		pthread_mutex_destroy(&global->state->left);
+	pthread_mutex_destroy(&global->write);
+}
+
 void		pthreads_create(t_struct *global, pthread_t *philo, int argc)
 {
 	int			i;
-	pthread_t	philo_dead;
 
 	i = -1;
-	pthread_create(&philo_dead, NULL, dead_thread, (void *)global);
+	// pthread_create(&philo_dead, NULL, dead_thread, (void *)global);
 	while (++i < global->philo_num && !global->philo_dead)
 		pthread_create(&philo[i], NULL, start_eat, (void *)&global->state[i]);
-	pthread_join(philo_dead, NULL);
-	pthread_detach(*philo);
+	pthread_join(*philo, NULL);
+	// free_all(global);
+	// pthread_detach(*philo);
 }
 
+void		pthreads_dead(t_struct *global)
+{
+	pthread_t	philo_dead;
+
+	pthread_create(&philo_dead, NULL, dead_thread, (void *)global);
+	pthread_join(philo_dead, NULL);
+}
 
 int			main(int argc, char **argv)
 {	
@@ -126,7 +160,7 @@ int			main(int argc, char **argv)
 	if (!philo)
 		return (ft_error("Malloc Error!\n"));
 	pthreads_create(&global, philo, argc);
-	check_eat(&global);
+	pthreads_dead(&global);
 	return (0);
 }
 

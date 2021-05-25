@@ -81,6 +81,21 @@ void		*dead_thread(void *tmp_state)
 	return (NULL);
 }
 
+int			check_eat(t_struct *global)
+{
+	int i;
+
+	if (global->state[0].times_to_eat != -1)
+	{
+		i = 0;
+		while(global->state[i].done_eat == 1)
+			i++;
+		if (i == global->philo_num)
+			return (1);
+	}
+	return (0);
+}
+
 void		pthreads_create(t_struct *global, pthread_t *philo, int argc)
 {
 	int			i;
@@ -93,6 +108,7 @@ void		pthreads_create(t_struct *global, pthread_t *philo, int argc)
 	pthread_join(philo_dead, NULL);
 	pthread_detach(*philo);
 }
+
 
 int			main(int argc, char **argv)
 {	
@@ -110,6 +126,7 @@ int			main(int argc, char **argv)
 	if (!philo)
 		return (ft_error("Malloc Error!\n"));
 	pthreads_create(&global, philo, argc);
+	check_eat(&global);
 	return (0);
 }
 

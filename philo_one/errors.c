@@ -7,9 +7,9 @@
 
 #include "philo_one.h"
 
-int			ft_strlen(char *str)
+int	ft_strlen(char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (str[i])
@@ -17,21 +17,21 @@ int			ft_strlen(char *str)
 	return (i);
 }
 
-int			ft_error(char *str)
+int	ft_error(char *str)
 {
 	write(2, str, ft_strlen(str));
 	exit(1);
 }
 
-int			ft_isnum(char c)	
+int	ft_isnum(char c)	
 {
 	if (c >= 48 && c <= 57)
 		return (1);
-	else 
+	else
 		return (0);
 }
 
-int			check_argv_excess(char **argv)
+int	check_argv_excess(char **argv)
 {
 	int	i;
 	int	j;
@@ -50,10 +50,10 @@ int			check_argv_excess(char **argv)
 	return (0);
 }		
 
-int		check_errors(int argc, char **argv)
+int	check_errors(int argc, char **argv)
 {
 	if (argc != 5 && argc != 6)
-		return (ft_error("Error! Arguments\n"));		
+		return (ft_error("Error! Arguments\n"));
 	check_argv_excess(argv);
 	return (1);
 }

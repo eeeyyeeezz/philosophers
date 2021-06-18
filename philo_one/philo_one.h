@@ -7,30 +7,29 @@
 
 #ifndef PHILO_ONE_H
 # define PHILO_ONE_H
-# include <stdlib.h>
-# include <stdio.h>
-# include <pthread.h>
-# include <unistd.h>
-#include <sys/time.h>
+# include	<sys/time.h>
+# include	<pthread.h>
+# include	<unistd.h>
+# include	<stdlib.h>
+# include	<stdio.h>
 
-typedef		struct s_state
+typedef struct s_state
 {
 	ssize_t			*time;
 	int				philo_numbers;
 	int				philo_score;
 	int				time_live;
 	int				time_eat;
-	ssize_t			philo_time;		// когда последний раз поел
+	ssize_t			philo_time;
 	int				time_sleep;
 	int				done_eat;
-	int				times_to_eat;	
+	int				times_to_eat;
 	pthread_mutex_t	left;
 	pthread_mutex_t	*right;
-	pthread_mutex_t *write;
+	pthread_mutex_t	*write;
 }					t_state;
 
-
-typedef		struct s_struct
+typedef struct s_struct
 {
 	ssize_t			time;
 	int				philo_num;

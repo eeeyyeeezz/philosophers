@@ -5,17 +5,17 @@ void	ft_putchar(char c)
 	write(1, &c, 1);
 }
 
-void		ft_putstr(char *s)
+void	ft_putstr(char *s)
 {
 	while (*s)
 		write(1, &*s++, 1);
 }
 
-int		ft_atoi(const char *str)
+int	ft_atoi(const char *str)
 {
-	int i;
-	int res;
-	int minus;
+	int	i;
+	int	res;
+	int	minus;
 
 	i = 0;
 	res = 0;
@@ -36,7 +36,7 @@ int		ft_atoi(const char *str)
 	return (minus * res);
 }
 
-void			ft_putnbr(int nb)
+void	ft_putnbr(int nb)
 {
 	if (nb < 0 && nb != -2147483648)
 	{

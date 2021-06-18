@@ -7,9 +7,9 @@
 
 #include "philo_one.h"
 
-void		pars_arg(t_struct *global, int argc, char **argv)
+void	pars_arg(t_struct *global, int argc, char **argv)
 {
-	int i;
+	int	i;
 
 	i = -1;
 	global->philo_num = ft_atoi(argv[1]);
@@ -23,20 +23,20 @@ void		pars_arg(t_struct *global, int argc, char **argv)
 		global->state[i].write = &global->write;
 		global->state[i].time = &global->time;
 		pthread_mutex_init(&global->state[i].left, NULL);
-		if (i == global->philo_num - 1)	
+		if (i == global->philo_num - 1)
 			global->state[i].right = &global->state[0].left;
 		else
 			global->state[i].right = &global->state[i + 1].left;
 		if (argc == 6)
 			global->state[i].times_to_eat = ft_atoi(argv[5]);
-		else 
+		else
 			global->state[i].times_to_eat = -1;
 	}
 }
 
-void		declare_struct(t_struct	*global, char **argv, int argc)
+void	declare_struct(t_struct	*global, char **argv, int argc)
 {
-	int i;
+	int	i;
 
 	i = -1;
 	pthread_mutex_init(&global->write, NULL);

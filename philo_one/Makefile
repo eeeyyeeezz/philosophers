@@ -24,11 +24,11 @@ SRC =	declare_pars.c\
 
 # COLORS
 
-RED = "\033[0;31m"
+RED = "\033[1;31m"
 BLUE = "\033[0;34m"
 YELLOW = "\033[0;33m"
 WHITE = "\033[1;37m"
-GREEN = "\033[0;32m"
+GREEN = "\033[1;32m"
 PURPLE = "\033[0;35m"
 GRAY = "\033[1;30m"
 NORMAL = "\033[0m"
@@ -45,10 +45,11 @@ $(NAME): $(HEADER) $(SRC)
 	@echo ${GREEN} "Compiling ${NAME} completed!" ${NORMAL}
 
 clean:
-	rm -f $(OBJ)
+	@rm -f $(OBJ)
+	@echo ${RED} "Clean completed!" ${NORMAL}
 
 fclean: clean
-	rm -f $(NAME)
+	@rm -f $(NAME)
 
 re: fclean all
 

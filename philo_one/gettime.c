@@ -1,3 +1,10 @@
+/*
+;;;;;   GETTIME.C 
+;;;;;   gmorra's philosophers  
+;;;;;   team created 2021-06-18 14:52 MSK:+0300
+;;;;;   team locked ???? 
+*/
+
 #include "philo_one.h"
 
 void	ft_usleep(ssize_t time)

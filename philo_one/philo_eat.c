@@ -1,3 +1,10 @@
+/*
+;;;;;   PHILO_EAT_C 
+;;;;;   gmorra's philosophers  
+;;;;;   team created 2021-06-18 14:52 MSK:+0300
+;;;;;   team locked ???? 
+*/
+
 #include "philo_one.h"
 
 void		take_even_forks(t_state *state)
@@ -26,4 +33,32 @@ void		philo_eat(t_state *state)
 	printf("\033[0;35m[%lu]\033[0m %d \033[0;34mis eating\033[0m\n", get_time(*state->time), state->philo_score);
 	ft_usleep(state->time_eat);
 	unlock_mutex(state);
+}
+
+void		philo_sleep(t_state *state)
+{
+	printf("\033[0;35m[%lu]\033[0m %d \033[0;33mis sleeping\033[0m\n", get_time(*state->time), state->philo_score);
+	ft_usleep(state->time_sleep);
+}
+
+void		*start_eat(void *tmp_state)
+{
+	t_state *state;
+	state = (t_state *)tmp_state;
+	int count;
+
+	if (state->times_to_eat == -1)
+		count = -1;
+	else	
+		count = state->times_to_eat;
+	while (count--)
+	{
+		philo_eat(state);
+		philo_sleep(state);
+		printf("\033[0;35m[%lu]\033[0m %d \033[1;37mis thinking\033[0m\n", get_time(*state->time), state->philo_score);
+	}
+	if (state->done_eat != -1)
+		state->done_eat = 1;
+	printf("\033[0;35m[%lu]\033[0m %d \033[2;37mhas finished eating!\033[0m\n", get_time(*state->time), state->philo_score);
+	return (NULL);
 }

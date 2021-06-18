@@ -7,23 +7,33 @@
 
 #include "philo_one.h"
 
-void		*dead_thread(void *tmp_state)
+static int	check_one_philo(t_struct *global)
 {
-	t_struct *global;
-	int i;
-	global = (t_struct *)tmp_state;
-
 	if (global->state[0].philo_numbers == 1)
 	{
 		while (1)
 		{
-			if ((global->state[0].time_live - (get_time(*global->state[0].time) - global->state[0].philo_time)) <= 0)
+			if ((global->state[0].time_live - (get_time(*global->state[0].time)
+						- global->state[0].philo_time)) <= 0)
 			{
-				printf("\033[0;35m[%zd]\033[0m %d \033[1;31mis dead\033[0m\n", get_time(*global->state[0].time), global->state[0].philo_score);
-				return (NULL);
+				printf("\033[0;35m[%zd]\033[0m %d \033[1;31mis dead\033[0m\n",
+					get_time(*global->state[0].time),
+					global->state[0].philo_score);
+				return (1);
 			}
 		}
 	}
+	return (0);
+}
+
+void	*dead_thread(void *tmp_state)
+{
+	t_struct	*global;
+	int			i;
+
+	global = (t_struct *)tmp_state;
+	if (check_one_philo(global) == 1)
+		return (NULL);
 	while (1)
 	{
 		i = -1;
@@ -45,9 +55,9 @@ void		*dead_thread(void *tmp_state)
 	return (NULL);
 }
 
-void		free_all(t_struct *global)
+void	free_all(t_struct *global)
 {
-	int i;
+	int	i;
 
 	i = -1;
 	free(global->state);
@@ -56,11 +66,10 @@ void		free_all(t_struct *global)
 	pthread_mutex_destroy(&global->write);
 }
 
-void		pthreads_create(t_struct *global, pthread_t *philo, int argc)
+void	pthreads_create(t_struct *global, pthread_t *philo)
 {
-	pthread_t	philo_dead;
-	(void)argc;
 	int			i;
+	pthread_t	philo_dead;
 
 	i = -1;
 	pthread_create(&philo_dead, NULL, dead_thread, (void *)global);
@@ -70,7 +79,7 @@ void		pthreads_create(t_struct *global, pthread_t *philo, int argc)
 	pthread_detach(*philo);
 }
 
-void		pthreads_dead(t_struct *global)
+void	pthreads_dead(t_struct *global)
 {
 	pthread_t	philo_dead;
 

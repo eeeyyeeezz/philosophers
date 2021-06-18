@@ -56,7 +56,7 @@ void			lock_even_mutex(t_state *state);
 void			lock_odd_mutex(t_state *state);
 void			double_lock_mutex(t_state *state);
 void			declare_state(t_struct *global, int argc);
-void			pthreads_create(t_struct *global, pthread_t *philo, int argc);
+void			pthreads_create(t_struct *global, pthread_t *philo);
 void			declare_struct(t_struct *global, char **argv, int argc);
 void			pars_arg(t_struct *global, int argc, char **argv);
 int				check_errors(int argc, char **argv);

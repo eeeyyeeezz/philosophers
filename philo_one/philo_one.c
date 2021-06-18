@@ -52,6 +52,6 @@ int	main(int argc, char **argv)
 	philo = malloc(sizeof(pthread_t) * (global.philo_num + 1));
 	if (!philo)
 		return (ft_error("Malloc Error!\n"));
-	pthreads_create(&global, philo, argc);
+	pthreads_create(&global, philo);
 	return (0);
 }

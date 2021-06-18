@@ -16,6 +16,7 @@
 typedef		struct s_state
 {
 	ssize_t			*time;
+	int				philo_numbers;
 	int				philo_score;
 	int				time_live;
 	int				time_eat;
@@ -39,6 +40,7 @@ typedef		struct s_struct
 }					t_struct;
 
 
+void			philo_eat(t_state *state);
 void			ft_usleep(ssize_t time);
 void			ft_putchar(char c);
 void			ft_putnbr(int nb);

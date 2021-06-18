@@ -7,19 +7,6 @@
 
 #include "philo_one.h"
 
-void		philo_eat(t_state *state)
-{
-	lock_even_mutex(state);
-	printf("\033[0;35m[%lu]\033[0m %d \033[0;32mhas taken a fork\033[0m\n", get_time(*state->time), state->philo_score);
-	lock_odd_mutex(state);
-	printf("\033[0;35m[%lu]\033[0m %d \033[0;32mhas taken a fork\033[0m\n", get_time(*state->time), state->philo_score);
-	printf("\033[0;35m[%lu]\033[0m %d \033[0;34mis eating\033[0m\n", get_time(*state->time), state->philo_score);
-	state->philo_time = get_time(*state->time);
-	ft_usleep(state->time_eat);
-	state->philo_time = get_time(*state->time);
-	unlock_mutex(state);
-}
-
 void		philo_sleep(t_state *state)
 {
 	printf("\033[0;35m[%lu]\033[0m %d \033[0;33mis sleeping\033[0m\n", get_time(*state->time), state->philo_score);
@@ -46,7 +33,6 @@ void		*start_eat(void *tmp_state)
 	{
 		philo_eat(state);
 		philo_sleep(state);
-		// printf("timelive [%d] time [%zd] philotime [%zd] num [%d]\n", state->time_live, get_time(*state->time), state->philo_time, state->philo_score);
 		philo_think(state);
 	}
 	if (state->done_eat != -1)
@@ -85,7 +71,7 @@ void		*dead_thread(void *tmp_state)
 			if ((global->state[i].time_live - (get_time(*global->state[i].time) - global->state[i].philo_time)) <= 0 
 			&& global->state[i].philo_time != 0 && global->state[i].done_eat != 1)
 			{
-				// printf("timelive [%d] time [%zd] philotime [%zd]\n", global->state[i].time_live, get_time(*global->state[i].time), global->state[i].philo_time);
+				printf("timelive [%d] time [%zd] philotime [%zd] philo [%d]\n", global->state[i].time_live, get_time(*global->state[i].time), global->state[i].philo_time, global->state[i].philo_score);
 				global->philo_dead = 1;
 				pthread_mutex_lock(global->state[i].write);	
 				printf("\033[0;35m[%zd]\033[0m %d \033[1;31mis dead\033[0m\n", get_time(*global->state[i].time), global->state[i].philo_score);

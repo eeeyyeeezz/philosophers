@@ -9,6 +9,7 @@ void		pars_arg(t_struct *global, int argc, char **argv)
 	while (++i < ft_atoi(argv[1]))
 	{
 		global->state[i].philo_score = i + 1;
+		global->state[i].philo_numbers = ft_atoi(argv[1]);
 		global->state[i].time_live = ft_atoi(argv[2]);
 		global->state[i].time_eat = ft_atoi(argv[3]);
 		global->state[i].time_sleep = ft_atoi(argv[4]);
@@ -35,6 +36,7 @@ void		declare_struct(t_struct	*global, char **argv, int argc)
 	global->philo_dead = 0;
 	while (++i < ft_atoi(argv[1]))
 	{
+		global->state[i].philo_numbers = 0;
 		global->state[i].philo_score = 0;
 		global->state[i].time_live = 0;
 		global->state[i].time_eat = 0;

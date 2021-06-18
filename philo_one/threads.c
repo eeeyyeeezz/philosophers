@@ -39,20 +39,20 @@ void	*dead_thread(void *tmp_state)
 		i = -1;
 		while (++i < global->philo_num)
 		{
-			if ((global->state[i].time_live - (get_time(*global->state[i].time) - global->state[i].philo_time)) < 0 
-			&& global->state[i].philo_time != 0 && global->state[i].done_eat != 1)
+			if ((global->state[i].time_live - (get_time(*global->state[i].time)
+						- global->state[i].philo_time)) < 0
+				&& global->state[i].philo_time != 0
+				&& global->state[i].done_eat != 1)
 			{
-				printf("timelive [%d] time [%zd] philotime [%zd] philo [%d]\n", global->state[i].time_live, get_time(*global->state[i].time), global->state[i].philo_time, global->state[i].philo_score);
 				global->philo_dead = 1;
-				pthread_mutex_lock(global->state[i].write);	
-				printf("\033[0;35m[%zd]\033[0m %d \033[1;31mis dead\033[0m\n", get_time(*global->state[i].time), global->state[i].philo_score);
+				pthread_mutex_lock(global->state[i].write);
+				print_dead(global, i);
 				return (NULL);
 			}
 		}
 		if (count_ate(global) == global->philo_num)
-			return (NULL);		
+			return (NULL);
 	}
-	return (NULL);
 }
 
 void	free_all(t_struct *global)

@@ -21,6 +21,13 @@ void	ft_usleep(ssize_t time)
 	}
 }
 
+void	print_dead(t_struct *global, int i)
+{
+	printf("\033[0;35m[%zd]\033[0m %d \033[1;31mis dead\033[0m\n",
+					get_time(*global->state[i].time),
+					global->state[i].philo_score);
+}
+
 ssize_t	get_time(ssize_t time)
 {
 	struct timeval	t1;

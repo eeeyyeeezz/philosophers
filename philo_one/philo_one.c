@@ -7,11 +7,10 @@
 
 #include "philo_one.h"
 
-
-int			count_ate(t_struct *global)
+int	count_ate(t_struct *global)
 {
-	int i;
-	int count;
+	int	i;
+	int	count;
 
 	i = -1;
 	count = 0;
@@ -23,15 +22,14 @@ int			count_ate(t_struct *global)
 	return (count);
 }
 
-
-int			check_eat(t_struct *global)
+int	check_eat(t_struct *global)
 {
-	int i;
+	int	i;
 
 	if (global->state[0].times_to_eat != -1)
 	{
 		i = 0;
-		while(global->state[i].done_eat == 1)
+		while (global->state[i].done_eat == 1)
 			i++;
 		if (i == global->philo_num)
 			return (1);
@@ -39,7 +37,7 @@ int			check_eat(t_struct *global)
 	return (0);
 }
 
-int			main(int argc, char **argv)
+int	main(int argc, char **argv)
 {	
 	t_struct		global;
 	pthread_t		*philo;
@@ -57,7 +55,3 @@ int			main(int argc, char **argv)
 	pthreads_create(&global, philo, argc);
 	return (0);
 }
-
-// !) ft_error освобождение памяти добавить
-// Когда все поели выйти из программ
-// Защищать вывод мьютексом? 

@@ -62,13 +62,23 @@ void		*dead_thread(void *tmp_state)
 	int i;
 	global = (t_struct *)tmp_state;
 
+	if (global->state[i].philo_numbers == 1)
+	{
+		while (1)
+		{
+			if ((global->state[i].time_live - (get_time(*global->state[i].time) - global->state[i].philo_time)) <= 0)
+			{
+				printf("\033[0;35m[%zd]\033[0m %d \033[1;31mis dead\033[0m\n", get_time(*global->state[i].time), global->state[i].philo_score);
+				return (NULL);
+			}
+		}
+	}
 	while (1)
 	{
-		// usleep(global->state[0].time_live / 4);
 		i = -1;
 		while (++i < global->philo_num)
 		{
-			if ((global->state[i].time_live - (get_time(*global->state[i].time) - global->state[i].philo_time)) <= 0 
+			if ((global->state[i].time_live - (get_time(*global->state[i].time) - global->state[i].philo_time)) < 0 
 			&& global->state[i].philo_time != 0 && global->state[i].done_eat != 1)
 			{
 				printf("timelive [%d] time [%zd] philotime [%zd] philo [%d]\n", global->state[i].time_live, get_time(*global->state[i].time), global->state[i].philo_time, global->state[i].philo_score);
@@ -120,8 +130,6 @@ void		pthreads_create(t_struct *global, pthread_t *philo, int argc)
 	while (++i < global->philo_num && !global->philo_dead)
 		pthread_create(&philo[i], NULL, start_eat, (void *)&global->state[i]);
 	pthread_join(philo_dead, NULL);
-	// pthread_join(*philo, NULL);
-	// free_all(global);
 	pthread_detach(*philo);
 }
 
@@ -149,7 +157,6 @@ int			main(int argc, char **argv)
 	if (!philo)
 		return (ft_error("Malloc Error!\n"));
 	pthreads_create(&global, philo, argc);
-	// pthreads_dead(&global);
 	return (0);
 }
 

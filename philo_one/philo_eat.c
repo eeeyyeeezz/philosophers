@@ -18,8 +18,6 @@ void		take_odd_forks(t_state *state)
 
 void		philo_eat(t_state *state)
 {
-	if (state->philo_numbers % 2 != 0 && (state->philo_score % 2 != 0 || state->philo_score == state->philo_numbers) && state->philo_numbers != 1)
-		ft_usleep(state->time_eat);
 	lock_even_mutex(state);
 	take_even_forks(state);
 	lock_odd_mutex(state);

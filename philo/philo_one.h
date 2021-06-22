@@ -1,8 +1,8 @@
 /*
-;;;;;   PHILO_ONE_H 
-;;;;;   gmorra's philosophers  
-;;;;;   team created ??? 
-;;;;;   team locked ???? 
+;;;;;	PHILO_ONE.C
+;;;;;	gmorra's philosophers
+;;;;;	team created 2021-06-18 14:52 MSK:+0300
+;;;;;	team locked 2021-06-19 12:20 MSK:+0300
 */
 
 #ifndef PHILO_ONE_H

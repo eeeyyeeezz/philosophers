@@ -1,8 +1,8 @@
 /*
-;;;;;   PHILO_EAT_C 
-;;;;;   gmorra's philosophers  
-;;;;;   team created 2021-06-18 14:52 MSK:+0300
-;;;;;   team locked ???? 
+;;;;;	PHILO_EAT.C
+;;;;;	gmorra's philosophers
+;;;;;	team created 2021-06-18 14:52 MSK:+0300
+;;;;;	team locked 2021-06-19 12:20 MSK:+0300
 */
 
 #include "philo_one.h"

@@ -1,14 +1,14 @@
 /*
-;;;;;   PHILO_ONE_C 
-;;;;;   gmorra's philosophers  
-;;;;;   team created 2021-06-18 14:52 MSK:+0300
-;;;;;   team locked ???? 
+;;;;;	PHILO_ONE_C
+;;;;;	gmorra's philosophers
+;;;;;	team created 2021-06-18 14:52 MSK:+0300
+;;;;;	team locked 2021-06-19 12:20 MSK:+0300
 */
 
 #include "philo_one.h"
 
 int	count_ate(t_struct *global)
-{
+{	
 	int	i;
 	int	count;
 
@@ -53,5 +53,7 @@ int	main(int argc, char **argv)
 	if (!philo)
 		return (ft_error("Malloc Error!\n"));
 	pthreads_create(&global, philo);
+	free(global.state);
+	free(philo);
 	return (0);
 }

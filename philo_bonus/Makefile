@@ -5,17 +5,17 @@
 #;;;;;   team locked 2021-06-19 12:20 MSK:+0300 
 #*/
 
-NAME = philo_one
+NAME = philo_bonus
 
 CFLAGS = -Wall -Wextra -Werror
 
-HEADER = philo_one.h
+HEADER = philo_bonus.h
 
 CC = gcc
 
 SRC =	declare_pars.c\
 		philo_eat.c\
-		philo_one.c\
+		philo_bonus.c\
 		gettime.c\
 		threads.c\
 		errors.c\

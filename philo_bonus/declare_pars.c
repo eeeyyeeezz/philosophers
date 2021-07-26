@@ -7,7 +7,17 @@
 
 #include "philo_bonus.h"
 
-static	void	pars_arg(t_struct *global, int argc, char **argv)
+static	void	set_semaphores(t_struct *global, char **argv, int argc)
+{
+	global->forks = sem_open("forks", O_CREAT, 0777, ft_atoi(argv[1]));
+	sem_unlink("forks");
+	global->waiter = sem_open("waiter", O_CREAT, 0777, 1);
+	sem_unlink("waiter");
+	global->write = sem_open("write", O_CREAT, 0777, 1);
+	sem_unlink("chat");
+}
+
+void	pars_arg(t_struct *global, int argc, char **argv)
 {
 	int	i;
 
@@ -19,7 +29,11 @@ static	void	pars_arg(t_struct *global, int argc, char **argv)
 		global->state[i].philo_numbers = ft_atoi(argv[1]);
 		global->state[i].time_live = ft_atoi(argv[2]);
 		global->state[i].time_eat = ft_atoi(argv[3]);
+		global->state[i].pids = &global->pids[i];
 		global->state[i].time_sleep = ft_atoi(argv[4]);
+		global->state[i].waiter = global->waiter;
+		global->state[i].forks = global->forks;
+		global->state[i].write = global->forks;
 		global->state[i].time = &global->time;
 		if (argc == 6)
 			global->state[i].times_to_eat = ft_atoi(argv[5]);
@@ -28,15 +42,6 @@ static	void	pars_arg(t_struct *global, int argc, char **argv)
 	}
 }
 
-static	void	set_semaphores(t_struct *global, char **argv, int argc)
-{
-	global->forks = sem_open("forks", O_CREAT, 0777, ft_atoi(argv[0]));
-	sem_unlink("forks");
-	global->waiter = sem_open("waiter", O_CREAT, 0777, 1);
-	sem_unlink("waiter");
-	global->write = sem_open("write", O_CREAT, 0777, 1);
-	sem_unlink("chat");
-}
 
 void	declare_struct(t_struct	*global, char **argv, int argc)
 {
@@ -64,7 +69,7 @@ void	declare_struct(t_struct	*global, char **argv, int argc)
 		}
 	}
 	set_semaphores(global, argv, argc);
-	global->pids = malloc(sizeof(pid_t) * ft_atoi(argv[0]));
+	global->pids = malloc(sizeof(pid_t) * ft_atoi(argv[1]));
 	if (!global->pids)
 		ft_error("Malloc Error!\n");
 }

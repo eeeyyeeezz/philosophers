@@ -44,16 +44,16 @@ int	main(int argc, char **argv)
 
 	global.time = get_time(0);
 	check_errors(argc, argv);
-	global.state = malloc(sizeof(t_state) * (ft_atoi(argv[1]) + 1));
+	global.state = malloc(sizeof(t_state) * (ft_atoi(argv[1])));
 	if (!global.state)
 		return (ft_error("Malloc Error!\n"));
 	declare_struct(&global, argv, argc);
 	pars_arg(&global, argc, argv);
-	philo = malloc(sizeof(pthread_t) * (global.philo_num + 1));
+	philo = malloc(sizeof(pthread_t) * global.philo_num + 1);
 	if (!philo)
 		return (ft_error("Malloc Error!\n"));
-	pthreads_create(&global, philo);
-	free(global.state);
-	free(philo);
+	processes_create(&global, philo);
+	// free_all
+	ft_free((void *)&global.state);
 	return (0);
 }

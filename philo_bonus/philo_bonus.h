@@ -12,19 +12,24 @@
 # include	<unistd.h>
 # include	<stdlib.h>
 # include	<stdio.h>
-#include	<semaphore.h>
+# include	<semaphore.h>
+# include	<signal.h>
 
 typedef struct s_state
 {
 	ssize_t			*time;
+	pid_t			*pids;
 	int				philo_numbers;
 	int				philo_score;
+	ssize_t			philo_time;
 	int				time_live;
 	int				time_eat;
-	ssize_t			philo_time;
 	int				time_sleep;
 	int				done_eat;
 	int				times_to_eat;
+	sem_t			*forks;
+	sem_t			*waiter;
+	sem_t			*write;
 }					t_state;
 
 typedef struct s_struct
@@ -39,6 +44,7 @@ typedef struct s_struct
 	t_state			*state;
 }					t_struct;
 
+ssize_t			get_time(ssize_t time);
 void			ft_free(void **var);
 int				count_ate(t_struct *global);
 void			*start_eat(void *tmp_state);
@@ -51,14 +57,14 @@ int				ft_atoi(const char *str);
 int				ft_strlen(char *str);
 int				ft_error(char *str);
 int				ft_isnum(char c);
-ssize_t			get_time(ssize_t time);
 void			unlock_mutex(t_state *state);
 void			lock_even_mutex(t_state *state);
 void			lock_odd_mutex(t_state *state);
 void			double_lock_mutex(t_state *state);
 void			print_dead(t_struct *global, int i);
 void			declare_state(t_struct *global, int argc);
-void			pthreads_create(t_struct *global, pthread_t *philo);
+void			processes_create(t_struct *global, pthread_t *philo);
+void			pars_arg(t_struct *global, int argc, char **argv);
 void			declare_struct(t_struct *global, char **argv, int argc);
 int				check_errors(int argc, char **argv);
 int				check_argv_excess(char **argv);

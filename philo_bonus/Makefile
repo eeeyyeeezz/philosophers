@@ -7,7 +7,7 @@
 
 NAME = philo_bonus
 
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS =
 
 HEADER = philo_bonus.h
 
@@ -20,7 +20,6 @@ SRC =	declare_pars.c\
 		threads.c\
 		errors.c\
 		utils.c\
-		mutex.c\
 
 # COLORS
 
@@ -43,6 +42,9 @@ all: ${NAME}
 $(NAME): ${HEADER} ${SRC}
 	@${CC} ${CFLAGS} ${SRC} -o ${NAME}
 	@echo ${GREEN}"Compiling ${NAME} completed!"${NORMAL}
+
+RUN:
+	@gcc *.c -g -o ${NAME} 
 
 clean:
 	@rm -f ${OBJ}

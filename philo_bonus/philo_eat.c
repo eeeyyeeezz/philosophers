@@ -7,37 +7,33 @@
 
 #include "philo_bonus.h"
 
-void	take_even_forks(t_state *state)
+static	void	take_fork(t_state *state)
 {
-	if (state->philo_score % 2 == 0)
-		printf("\033[0;35m[%lu]\033[0m %d \033[0;32mhas taken a L fork\033[0m\n",
-			get_time(*state->time), state->philo_score);
-	else
-		printf("\033[0;35m[%lu]\033[0m %d \033[0;32mhas taken a R fork\033[0m\n",
-			get_time(*state->time), state->philo_score);
+	sem_wait(state->waiter);
+	sem_wait(state->forks);
+	printf("\033[0;35m[%lu]\033[0m %d \033[0;32mhas taken a fork\033[0m\n",
+		get_time(*state->time), state->philo_score);
+	sem_wait(state->forks);
+	printf("\033[0;35m[%lu]\033[0m %d \033[0;32mhas taken a fork\033[0m\n",
+		get_time(*state->time), state->philo_score);
+	sem_post(state->waiter);
 }
 
-void	take_odd_forks(t_state *state)
+static	void	put_forks(t_state *state)
 {
-	if (state->philo_score % 2 == 0)
-		printf("\033[0;35m[%lu]\033[0m %d \033[0;32mhas taken a R fork\033[0m\n",
-			get_time(*state->time), state->philo_score);
-	else
-		printf("\033[0;35m[%lu]\033[0m %d \033[0;32mhas taken a L fork\033[0m\n",
-			get_time(*state->time), state->philo_score);
+	sem_post(state->forks);
+	sem_post(state->forks);
 }
-
 
 void	philo_eat(t_state *state)
 {
-	take_even_forks(state);
-	take_odd_forks(state);
-	
+	take_fork(state);
 	state->philo_time = get_time(*state->time);
+	// printf("real talk [%zd] score [%d]\n", state->philo_time, state->philo_score);
 	printf("\033[0;35m[%lu]\033[0m %d \033[0;34mis eating\033[0m\n",
 		get_time(*state->time), state->philo_score);
 	ft_usleep(state->time_eat);
-	unlock_mutex(state);
+	put_forks(state);
 }
 
 void	philo_sleep(t_state *state)
@@ -46,13 +42,14 @@ void	philo_sleep(t_state *state)
 		get_time(*state->time), state->philo_score);
 	ft_usleep(state->time_sleep);
 }
-
+	
 void	*start_eat(void *tmp_state)
 {
 	int		count;
 	t_state	*state;
 
 	state = (t_state *)tmp_state;
+	// printf("ABOBA\n");
 	if (state->times_to_eat == -1)
 		count = -1;
 	else

@@ -7,18 +7,18 @@
 
 #include "philo_bonus.h"
 
-static int	check_one_philo(t_struct *global)
+static int	check_one_philo(t_state *state)
 {
-	if (global->state[0].philo_numbers == 1)
+	if (state->philo_numbers == 1)
 	{
 		while (1)
 		{
-			if ((global->state[0].time_live - (get_time(*global->state[0].time)
-						- global->state[0].philo_time)) <= 0)
+			if ((state->time_live - (get_time(*state->time)
+						- state->philo_time)) <= 0)
 			{
 				printf("\033[0;35m[%zd]\033[0m %d \033[1;31mis dead\033[0m\n",
-					get_time(*global->state[0].time),
-					global->state[0].philo_score);
+					get_time(*state->time),
+					state->philo_score);
 				return (1);
 			}
 		}
@@ -28,61 +28,69 @@ static int	check_one_philo(t_struct *global)
 
 void	*dead_thread(void *tmp_state)
 {
-	t_struct	*global;
+	t_state		*state;
 	int			i;
 
-	global = (t_struct *)tmp_state;
-	if (check_one_philo(global) == 1)
+	state = (t_state *)tmp_state;
+	if (check_one_philo(state) == 1)
 		return (NULL);
 	while (1)
 	{
 		i = -1;
-		while (++i < global->philo_num)
+		if ((state->time_live - (get_time(*state->time)
+					- state->philo_time)) < 0
+			&& state->philo_time != 0
+			&& state->done_eat != 1)
 		{
-			if ((global->state[i].time_live - (get_time(*global->state[i].time)
-						- global->state[i].philo_time)) < 0
-				&& global->state[i].philo_time != 0
-				&& global->state[i].done_eat != 1)
-			{
-				global->philo_dead = 1;
-				pthread_mutex_lock(global->state[i].write);
-				print_dead(global, i);
-				return (NULL);
-			}
-		}
-		if (count_ate(global) == global->philo_num)
+			sem_wait(state->write);
+			printf("\033[0;35m[%zd]\033[0m %d \033[1;31mis dead\033[0m\n",
+				get_time(*state->time), state->philo_score);
+			kill(*state->pids, 2);
 			return (NULL);
+		}
+		// if (count_ate(global) == global->philo_num)
+			// return (NULL);
 	}
 }
 
-void	free_all(t_struct *global)
+static	void	kill_all_processes(t_struct *global)
 {
 	int	i;
 
 	i = -1;
-	free(global->state);
-	while (&global->state[++i])
-		pthread_mutex_destroy(&global->state->left);
-	pthread_mutex_destroy(&global->write);
+	while (++i < global->philo_num)
+		kill(global->pids[i], 9);
 }
 
-void	pthreads_create(t_struct *global, pthread_t *philo)
+static	void	make_processes(t_struct *global, pthread_t *philo, int i)
+{
+	pthread_t	philo_dead;
+	pthread_create(&philo_dead, NULL, dead_thread, (void *)&global->state[i]);
+	pthread_create(&philo[i], NULL, start_eat, (void *)&global->state[i]);
+	pthread_join(philo_dead, NULL);
+	kill_all_processes(global);
+}
+
+void	processes_create(t_struct *global, pthread_t *philo)
 {
 	int			i;
-	pthread_t	philo_dead;
+	int			status;
 
 	i = -1;
-	pthread_create(&philo_dead, NULL, dead_thread, (void *)global);
+	// pthread_create(&philo_dead, NULL, dead_thread, (void *)global);
 	while (++i < global->philo_num && !global->philo_dead)
-		pthread_create(&philo[i], NULL, start_eat, (void *)&global->state[i]);
-	pthread_join(philo_dead, NULL);
-	pthread_detach(*philo);
-}
-
-void	pthreads_dead(t_struct *global)
-{
-	pthread_t	philo_dead;
-
-	pthread_create(&philo_dead, NULL, dead_thread, (void *)global);
-	pthread_join(philo_dead, NULL);
+	{
+		global->pids[i] = fork();
+		if (global->pids[i] == -1)
+			ft_error("Fork Errror!\n");
+		if (global->pids[i] == 0)
+			make_processes(global, philo, i);
+	}
+	i = -1;
+	while (++i < global->philo_num)
+		waitpid(global->pids[i], &status, 0);
+	// pthread_join(philo_dead, NULL);
+	// i = -1;
+	// while (++i < global->philo_num)
+	// 	pthread_detach(philo[i]);
 }

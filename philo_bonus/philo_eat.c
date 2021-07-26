@@ -49,7 +49,6 @@ void	*start_eat(void *tmp_state)
 	t_state	*state;
 
 	state = (t_state *)tmp_state;
-	// printf("ABOBA\n");
 	if (state->times_to_eat == -1)
 		count = -1;
 	else

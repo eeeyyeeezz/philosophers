@@ -45,7 +45,7 @@ void	*dead_thread(void *tmp_state)
 			sem_wait(state->write);
 			printf("\033[0;35m[%zd]\033[0m %d \033[1;31mis dead\033[0m\n",
 				get_time(*state->time), state->philo_score);
-			kill(*state->pids, 2);
+			// kill(*state->pids, 2);
 			return (NULL);
 		}
 		// if (count_ate(global) == global->philo_num)
@@ -68,6 +68,8 @@ static	void	make_processes(t_struct *global, pthread_t *philo, int i)
 	pthread_create(&philo_dead, NULL, dead_thread, (void *)&global->state[i]);
 	pthread_create(&philo[i], NULL, start_eat, (void *)&global->state[i]);
 	pthread_join(philo_dead, NULL);
+	printf("ABOBA\n");
+	pthread_detach(philo[i]);
 	kill_all_processes(global);
 }
 

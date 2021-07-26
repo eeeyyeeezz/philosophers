@@ -14,7 +14,7 @@ static	void	set_semaphores(t_struct *global, char **argv, int argc)
 	global->waiter = sem_open("waiter", O_CREAT, 0777, 1);
 	sem_unlink("waiter");
 	global->write = sem_open("write", O_CREAT, 0777, 1);
-	sem_unlink("chat");
+	sem_unlink("write");
 }
 
 void	pars_arg(t_struct *global, int argc, char **argv)

@@ -26,6 +26,7 @@ typedef struct s_state
 	int				time_eat;
 	int				time_sleep;
 	int				times_to_eat;
+	int				done_eat;
 	sem_t			*forks;
 	sem_t			*waiter;
 	sem_t			*write;

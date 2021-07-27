@@ -13,7 +13,7 @@ static	void	free_all(t_struct *global)
 
 	i = -1;
 	ft_free((void *)&global->state);
-
+	ft_free((void *)&global->pids);
 }
 
 int	main(int argc, char **argv)

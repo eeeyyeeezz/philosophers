@@ -7,7 +7,7 @@
 
 NAME = philo_bonus
 
-CFLAGS =
+CFLAGS = -Wall -Wextra -Werror
 
 HEADER = philo_bonus.h
 

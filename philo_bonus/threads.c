@@ -20,6 +20,7 @@ static int	check_one_philo(t_state *state)
 				printf("\033[0;35m[%zd]\033[0m %d \033[1;31mis dead\033[0m\n",
 					get_time(*state->time),
 					state->philo_score);
+				kill(*state->pids, 2);
 				return (1);
 			}
 		}
@@ -40,7 +41,8 @@ void	*dead_thread(void *tmp_state)
 		i = -1;
 		if ((state->time_live - (get_time(*state->time)
 					- state->philo_time)) < 0
-			&& state->philo_time != 0)
+			&& state->philo_time != 0
+			&& state->done_eat != 1)
 		{
 			sem_wait(state->write);
 			printf("\033[0;35m[%zd]\033[0m %d \033[1;31mis dead\033[0m\n",
@@ -78,9 +80,9 @@ static	void	make_processes(t_struct *global, pthread_t *philo, pthread_t count_e
 	pthread_t	philo_dead;
 	pthread_create(&philo_dead, NULL, dead_thread, (void *)&global->state[i]);
 	pthread_create(&philo[i], NULL, start_eat, (void *)&global->state[i]);
+	pthread_detach(philo[i]);
 	pthread_join(count_eat, NULL);
 	pthread_join(philo_dead, NULL);
-	// pthread_detach(philo[i]);
 	kill_all_processes(global);
 }
 
@@ -104,8 +106,4 @@ void	processes_create(t_struct *global, pthread_t *philo)
 	i = -1;
 	while (++i < global->philo_num)
 		waitpid(global->pids[i], &status, 0);
-	// pthread_join(philo_dead, NULL);
-	// i = -1;
-	// while (++i < global->philo_num)
-	// 	pthread_detach(philo[i]);
 }

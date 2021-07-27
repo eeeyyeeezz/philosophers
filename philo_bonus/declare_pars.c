@@ -45,9 +45,15 @@ void	pars_arg(t_struct *global, int argc, char **argv)
 		global->state[i].write = global->write;
 		global->state[i].time = &global->time;
 		if (argc == 6)
+		{
+			global->state[i].done_eat = 0;
 			global->state[i].times_to_eat = ft_atoi(argv[5]);
+		}
 		else
+		{
+			global->state[i].done_eat = -1;
 			global->state[i].times_to_eat = -1;
+		}
 	}
 }
 

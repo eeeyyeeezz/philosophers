@@ -53,15 +53,6 @@ void	*dead_thread(void *tmp_state)
 	}
 }
 
-static	void	kill_all_processes(t_struct *global)
-{
-	int	i;
-
-	i = -1;
-	while (++i < global->philo_num)
-		kill(global->pids[i], 9);
-}
-
 static	void	*count_to_eat(void *tmp_global)
 {
 	int			i;
@@ -75,9 +66,11 @@ static	void	*count_to_eat(void *tmp_global)
 	return (NULL);
 }
 
-static	void	make_processes(t_struct *global, pthread_t *philo, pthread_t count_eat, int i)
+static	void	make_processes(t_struct *global,
+	pthread_t *philo, pthread_t count_eat, int i)
 {
 	pthread_t	philo_dead;
+
 	pthread_create(&philo_dead, NULL, dead_thread, (void *)&global->state[i]);
 	pthread_create(&philo[i], NULL, start_eat, (void *)&global->state[i]);
 	pthread_detach(philo[i]);

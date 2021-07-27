@@ -1,12 +1,12 @@
 /*
-;;;;;	PHILO_ONE.C
+;;;;;	PHILO_BONUS.H
 ;;;;;	gmorra's philosophers
 ;;;;;	team created 2021-06-18 14:52 MSK:+0300
 ;;;;;	team locked 2021-06-19 12:20 MSK:+0300
 */
 
-#ifndef PHILO_ONE_H
-# define PHILO_ONE_H
+#ifndef PHILO_BONUS_H
+# define PHILO_BONUS_H
 # include	<sys/time.h>
 # include	<pthread.h>
 # include	<unistd.h>
@@ -65,6 +65,7 @@ void			lock_odd_mutex(t_state *state);
 void			double_lock_mutex(t_state *state);
 void			print_dead(t_struct *global, int i);
 void			declare_state(t_struct *global, int argc);
+void			kill_all_processes(t_struct *global);
 void			processes_create(t_struct *global, pthread_t *philo);
 void			pars_arg(t_struct *global, int argc, char **argv);
 void			declare_struct(t_struct *global, char **argv, int argc);

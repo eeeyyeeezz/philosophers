@@ -49,7 +49,7 @@ void	philo_sleep(t_state *state)
 	sem_post(state->write);
 	ft_usleep(state->time_sleep);
 }
-	
+
 void	*start_eat(void *tmp_state)
 {
 	int		count;

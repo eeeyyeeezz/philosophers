@@ -44,7 +44,7 @@ $(NAME): ${HEADER} ${SRC}
 	@echo ${GREEN}"Compiling ${NAME} completed!"${NORMAL}
 
 RUN:
-	@gcc *.c -g -o ${NAME} 
+	@gcc *.c -o ${NAME} 
 
 clean:
 	@rm -f ${OBJ}

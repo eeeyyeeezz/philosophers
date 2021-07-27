@@ -23,7 +23,7 @@ int	ft_error(char *str)
 	exit(1);
 }
 
-int	ft_isnum(char c)	
+int	ft_isnum(char c)
 {
 	if (c >= 48 && c <= 57)
 		return (1);

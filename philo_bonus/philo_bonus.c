@@ -16,6 +16,15 @@ static	void	free_all(t_struct *global)
 	ft_free((void *)&global->pids);
 }
 
+void	kill_all_processes(t_struct *global)
+{
+	int	i;
+
+	i = -1;
+	while (++i < global->philo_num)
+		kill(global->pids[i], 9);
+}
+
 int	main(int argc, char **argv)
 {	
 	t_struct		global;

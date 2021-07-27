@@ -29,7 +29,6 @@ void	philo_eat(t_state *state)
 {
 	take_fork(state);
 	state->philo_time = get_time(*state->time);
-	// printf("real talk [%zd] score [%d]\n", state->philo_time, state->philo_score);
 	printf("\033[0;35m[%lu]\033[0m %d \033[0;34mis eating\033[0m\n",
 		get_time(*state->time), state->philo_score);
 	ft_usleep(state->time_eat);
@@ -49,6 +48,7 @@ void	*start_eat(void *tmp_state)
 	t_state	*state;
 
 	state = (t_state *)tmp_state;
+
 	if (state->times_to_eat == -1)
 		count = -1;
 	else
@@ -60,8 +60,7 @@ void	*start_eat(void *tmp_state)
 		printf("\033[0;35m[%lu]\033[0m %d \033[1;37mis thinking\033[0m\n",
 			get_time(*state->time), state->philo_score);
 	}
-	if (state->done_eat != -1)
-		state->done_eat = 1;
+	sem_post(state->eat);
 	printf("\033[0;35m[%lu]\033[0m %d \033[2;37mhas finished eating!\033[0m\n",
 		get_time(*state->time), state->philo_score);
 	return (NULL);

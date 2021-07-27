@@ -25,11 +25,11 @@ typedef struct s_state
 	int				time_live;
 	int				time_eat;
 	int				time_sleep;
-	int				done_eat;
 	int				times_to_eat;
 	sem_t			*forks;
 	sem_t			*waiter;
 	sem_t			*write;
+	sem_t			*eat;
 }					t_state;
 
 typedef struct s_struct
@@ -38,6 +38,7 @@ typedef struct s_struct
 	int				philo_num;
 	int				philo_dead;
 	pid_t			*pids;
+	sem_t			*eat;
 	sem_t			*forks;
 	sem_t			*waiter;
 	sem_t			*write;

@@ -7,34 +7,13 @@
 
 #include "philo_bonus.h"
 
-int	count_ate(t_struct *global)
-{	
-	int	i;
-	int	count;
-
-	i = -1;
-	count = 0;
-	if (global->state[0].times_to_eat != -1)
-	{
-		while (global->state[++i].done_eat == 1)
-			count++;
-	}
-	return (count);
-}
-
-int	check_eat(t_struct *global)
+static	void	free_all(t_struct *global)
 {
 	int	i;
 
-	if (global->state[0].times_to_eat != -1)
-	{
-		i = 0;
-		while (global->state[i].done_eat == 1)
-			i++;
-		if (i == global->philo_num)
-			return (1);
-	}
-	return (0);
+	i = -1;
+	ft_free((void *)&global->state);
+
 }
 
 int	main(int argc, char **argv)
@@ -53,7 +32,6 @@ int	main(int argc, char **argv)
 	if (!philo)
 		return (ft_error("Malloc Error!\n"));
 	processes_create(&global, philo);
-	// free_all
-	ft_free((void *)&global.state);
+	free_all(&global);
 	return (0);
 }

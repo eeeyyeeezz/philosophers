@@ -87,7 +87,10 @@ void	processes_create(t_struct *global, pthread_t *philo)
 
 	i = -1;
 	if (global->state[0].times_to_eat != -1)
+	{
 		pthread_create(&count_eat, NULL, count_to_eat, (void *)global);
+		pthread_detach(count_eat);
+	}
 	while (++i < global->philo_num && !global->philo_dead)
 	{
 		global->pids[i] = fork();

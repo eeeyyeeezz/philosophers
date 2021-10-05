@@ -12,4 +12,4 @@ make // make bonus
 ```sh
 ./philo_bonus 
 ```
-
+![Alt Text](https://s9.gifyu.com/images/philo.gif)
